@@ -26,6 +26,36 @@ class dbHandler {
             }
         }
     }
+    public function getUser() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['getUser'])) {
+            $username = $_POST['username'];
+    
+            // Fetch the user data based on the username
+            $userData = $this->fetchData($username);
+    
+            if (!empty($userData)) {
+                // Display the fetched user data (assuming one match, but you can handle multiple)
+                echo "<table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+                foreach ($userData as $user) {
+                    echo "<tr>
+                        <td>{$user['username']}</td>
+                        <td>{$user['email']}</td>
+                    </tr>";
+                }
+                echo "</tbody></table>";
+            } else {
+                echo "No user found with that username.";
+            }
+        }
+    }
+    
 
     // Optional function to validate inputs
     private function validateInputs($fullname, $email, $username, $password) {
@@ -46,7 +76,9 @@ class dbHandler {
             $count = $stmt->fetchColumn();
 
             if ($count > 0) {
-                return "Error: Username or email already exists!";
+                echo "Error: Username or email already exists!";
+                return false;
+            
             }
 
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
@@ -61,25 +93,37 @@ class dbHandler {
             return false;
         }
     }
-    public function fetchData()
-    {
-        $sql = "SELECT * FROM users";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
+    public function fetchData($username)
+{
+    try {
+        $sql = "SELECT * FROM users WHERE username = :username";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['username' => $username]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        header('Location: phpHandler.php');
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return [];
     }
 }
 
+}
+
+// Initialize database connection
 // Initialize database connection
 $Objdbconnect = new dbConnection();
 $connection = $Objdbconnect->getConnection();
 
 if ($connection instanceof PDO || $connection instanceof mysqli) {
-    // Instantiate dbHandler with the connection and handle signup
+    // Instantiate dbHandler with the connection and handle signup and search
     $ObjdbHandler = new dbHandler($connection);
-    $ObjdbHandler->handleSignup();
+
+    // Handle form actions
+    if (isset($_POST['signup'])) {
+        $ObjdbHandler->handleSignup();
+    } elseif (isset($_POST['getUser'])) {
+        $ObjdbHandler->getUser();
+    }
 } else {
     echo $connection; // Print error message if connection fails
 }
+
