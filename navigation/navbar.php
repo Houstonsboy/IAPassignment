@@ -12,10 +12,10 @@ class NavBar{
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">NEW Vampires</a>
+          <a class="nav-link active" aria-current="page" href="index.php">enter translvania </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">View translvania</a>
+          <a class="nav-link" href="lookupindex.php">View translvania</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Pricing</a>
