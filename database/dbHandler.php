@@ -39,16 +39,36 @@ class dbHandler {
     // Function to insert data into the database
     public function insertData($fullname, $email, $username, $password) {
         try {
-            // Prepare the SQL statement
-            $stmt = $this->connection->prepare("INSERT INTO users (fullname, email, username, password) VALUES (?, ?, ?, ?)");
+            // Check if username or email already exists
+            $sql = "SELECT COUNT(*) FROM users WHERE username = :username OR email = :email";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute(['username' => $username, 'email' => $email]);
+            $count = $stmt->fetchColumn();
 
-            // Bind parameters and execute
-            $stmt->execute([$fullname, $email, $username, $password]);
+            if ($count > 0) {
+                return "Error: Username or email already exists!";
+            }
 
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $sql = "INSERT INTO users(fullname,email, username, password) VALUES(:fullname, :email, :username, :password)";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute(['fullname' => $fullname, 'email' => $email, 'username' => $username, 'password' => $hashedPassword]);
             echo "User successfully registered!";
+
+            return true;
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+            echo $e->getMessage();
+            return false;
         }
+    }
+    public function fetchData()
+    {
+        $sql = "SELECT * FROM users";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        header('Location: phpHandler.php');
     }
 }
 

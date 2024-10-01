@@ -18,7 +18,7 @@ class dbEndpoints
         try {
             // Check if username or email already exists
             $sql = "SELECT COUNT(*) FROM users WHERE username = :username OR email = :email";
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->connection->prepare($sql);
             $stmt->execute(['username' => $username, 'email' => $email]);
             $count = $stmt->fetchColumn();
 
@@ -30,6 +30,7 @@ class dbEndpoints
             $sql = "INSERT INTO users(fullname,email, username, password) VALUES(:fullname, :email, :username, :password)";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['fullname' => $name, 'email' => $email, 'username' => $username, 'password' => $hashedPassword]);
+            echo "User successfully registered!";
 
             return true;
         } catch (PDOException $e) {
@@ -38,14 +39,6 @@ class dbEndpoints
         }
     }
     // OBTAIN USER DATA
-    public function fetchData()
-    {
-        $sql = "SELECT * FROM users";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        header('Location: phpHandler.php');
-    }
+   
 }
 
