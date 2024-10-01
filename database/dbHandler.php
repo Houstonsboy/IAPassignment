@@ -1,6 +1,6 @@
 <?php
-require_once 'db.php';  // Database connection file
-require_once 'signup.php';  // Signup form
+require_once 'dbConnection.php';  // Database connection file
+require_once '../forms/Signup.php';  // Signup form
 
 class dbHandler {
     private $connection;

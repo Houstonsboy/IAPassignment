@@ -7,7 +7,7 @@ class Signup {
                 <div class="h-100 p-5 text-bg-dark rounded-3">
                     <h2>Sign Up</h2>
                     <!-- Form submission points to dbHandler.php -->
-                    <form action="dbHandler.php" method="POST" enctype="multipart/form-data">
+                    <form action="database/dbHandler.php" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="fullname" class="form-label">Fullname:</label>
                             <input type="text" name="fullname" class="form-control form-control-lg" maxlength="50" id="fullname" placeholder="Enter your name">
