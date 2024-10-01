@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'dbConnection.php';
-class dbHandler
+class dbEndpoints
 {
     private $dbconn;
 
@@ -48,3 +48,4 @@ class dbHandler
         header('Location: phpHandler.php');
     }
 }
+
