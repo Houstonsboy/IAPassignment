@@ -23,6 +23,7 @@ spl_autoload_register('classAutoLoad');
     $ObjLayouts = new layouts();
     $ObjNav = new NavBar();
     $ObjSignup= new signup();
+    $Objdbconnect= new dbConnection();
     // $ObjCont = new contents();
     // $ObjForm = new user_forms();
     // $conn = new dbConnection(DBTYPE, HOSTNAME, DBPORT, HOSTUSER, HOSTPASS, DBNAME);
