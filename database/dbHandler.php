@@ -59,12 +59,28 @@ class dbHandler {
 
     // Optional function to validate inputs
     private function validateInputs($fullname, $email, $username, $password) {
-        // Add basic validation, like checking for empty fields
+        // Check for empty fields
         if (empty($fullname) || empty($email) || empty($username) || empty($password)) {
-            return false;
+            return false; // Invalid if any field is empty
         }
-        return true;
+    
+        // Validate email contains '@'
+        if (!strpos($email, '@')) {
+            return false; // Invalid if '@' symbol is missing
+        }
+    
+        // Validate password
+        $hasNumber = preg_match('/[0-9]/', $password); // Check for at least one number
+        $hasSymbol = preg_match('/[\W]/', $password); // Check for at least one special character
+        $hasValidLength = strlen($password) >= 8; // Check for at least 8 characters
+    
+        if (!$hasNumber || !$hasSymbol || !$hasValidLength) {
+            return false; // Invalid if any of the password conditions are not met
+        }
+    
+        return true; // All checks passed
     }
+    
 
     // Function to insert data into the database
     public function insertData($fullname, $email, $username, $password) {
