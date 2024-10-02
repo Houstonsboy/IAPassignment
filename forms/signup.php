@@ -40,6 +40,7 @@ class Signup {
         </div>
         <?php
     }
+    
 }
 
 // Class to handle form validation and database interaction
@@ -122,6 +123,48 @@ class dbHandler {
             return $e->getMessage();
         }
     }
+    public function getUser() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['getUser'])) {
+            $username = $_POST['username'];
+    
+            // Fetch the user data based on the username
+            $userData = $this->fetchData($username);
+    
+            if (!empty($userData)) {
+                // Display the fetched user data (assuming one match, but you can handle multiple)
+                echo "<table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+                foreach ($userData as $user) {
+                    echo "<tr>
+                        <td>{$user['username']}</td>
+                        <td>{$user['email']}</td>
+                    </tr>";
+                }
+                echo "</tbody></table>";
+            } else {
+                echo "No user found with that username.";
+            }
+        }
+    }
+    
+    public function fetchData($username)
+{
+    try {
+        $sql = "SELECT * FROM users WHERE username = :username";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['username' => $username]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return [];
+    }
+}
 }
 
 

@@ -1,6 +1,6 @@
 <?php
 require_once 'dbConnection.php';  // Database connection file
-require_once '../forms/Signup.php';  // Signup form
+require_once '../forms/Signup.php';
 
 class dbHandler {
     private $connection;
@@ -59,31 +59,31 @@ class dbHandler {
 
     // Optional function to validate inputs
     private function validateInputs($fullname, $email, $username, $password) {
-        // Check for empty fields
         if (empty($fullname) || empty($email) || empty($username) || empty($password)) {
-            return false; // Invalid if any field is empty
+            return "All fields are required.";
         }
-    
-        // Validate email contains '@'
-        if (!strpos($email, '@')) {
-            return false; // Invalid if '@' symbol is missing
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return "Invalid email address.";
         }
-    
-        // Validate password
-        $hasNumber = preg_match('/[0-9]/', $password); // Check for at least one number
-        $hasSymbol = preg_match('/[\W]/', $password); // Check for at least one special character
-        $hasValidLength = strlen($password) >= 8; // Check for at least 8 characters
-    
-        if (!$hasNumber || !$hasSymbol || !$hasValidLength) {
-            return false; // Invalid if any of the password conditions are not met
+
+        // Validate password strength
+        $hasNumber = preg_match('/[0-9]/', $password);
+        $hasSymbol = preg_match('/[\W]/', $password);
+        $hasValidLength = strlen($password) >= 8;
+
+        if (!$hasValidLength) {
+            return "Password must be at least 8 characters long.";
+        } elseif (!$hasNumber || !$hasSymbol) {
+            return "Password must contain at least one number and one special character.";
         }
-    
-        return true; // All checks passed
+
+        return null; // If everything is valid
     }
-    
+
 
     // Function to insert data into the database
-    public function insertData($fullname, $email, $username, $password) {
+    private function insertData($fullname, $email, $username, $password) {
         try {
             // Check if username or email already exists
             $sql = "SELECT COUNT(*) FROM users WHERE username = :username OR email = :email";
@@ -92,21 +92,18 @@ class dbHandler {
             $count = $stmt->fetchColumn();
 
             if ($count > 0) {
-                echo "Error: Username or email already exists!";
-                return false;
-            
+                return "Error: Username or email already exists!";
             }
 
+            // Hash the password before saving it
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $sql = "INSERT INTO users(fullname,email, username, password) VALUES(:fullname, :email, :username, :password)";
+            $sql = "INSERT INTO users (fullname, email, username, password) VALUES (:fullname, :email, :username, :password)";
             $stmt = $this->connection->prepare($sql);
             $stmt->execute(['fullname' => $fullname, 'email' => $email, 'username' => $username, 'password' => $hashedPassword]);
-            echo "User successfully registered!";
 
             return true;
         } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false;
+            return $e->getMessage();
         }
     }
     public function fetchData($username)
