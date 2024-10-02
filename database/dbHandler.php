@@ -11,25 +11,52 @@ class dbHandler {
 
     // Function to validate inputs
     private function validateInputs($fullname, $email, $username, $password) {
+        $errors = []; // Initialize an array to hold error messages
+    
+        // Check for empty fields
         if (empty($fullname) || empty($email) || empty($username) || empty($password)) {
             return "All fields are required.";
         }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return "Invalid email address.";
+    
+        // Validate fullname to ensure it contains only letters and spaces
+        if (ctype_alpha(str_replace(" ", "", $fullname)) === FALSE) {
+            $errors['nameLetters_err'] = "Invalid name format: Full name must contain letters and spaces only.";
         }
-
+    
+        // Validate email address format
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email_format_err'] = 'Wrong email format.';
+        } else {
+            // Define valid domains
+            $conf['valid_domains'] = ["strathmore.edu", "gmail.com", "yahoo.com", "mada.co.ke", "outlook.com", 
+                                      "STRATHMORE.EDU", "GMAIL.COM", "YAHOO.COM", "MADA.CO.KE", "OUTLOOK.COM"];
+    
+            // Split email to check the domain
+            $arr_email_address = explode("@", $email);
+            $spot_dom = end($arr_email_address);
+    
+            // Check if the domain is valid
+            if (!in_array($spot_dom, $conf['valid_domains'])) {
+                $errors['mailDomain_err'] = "Invalid email address domain. Use only: " . implode(", ", $conf['valid_domains']);
+            }
+        }
+    
         // Validate password strength
         $hasNumber = preg_match('/[0-9]/', $password);
         $hasSymbol = preg_match('/[\W]/', $password);
         $hasValidLength = strlen($password) >= 8;
-
+    
         if (!$hasValidLength) {
-            return "Password must be at least 8 characters long.";
+            $errors['password_length_err'] = "Password must be at least 8 characters long.";
         } elseif (!$hasNumber || !$hasSymbol) {
-            return "Password must contain at least one number and one special character.";
+            $errors['password_strength_err'] = "Password must contain at least one number and one special character.";
         }
-
+    
+        // If there are errors, return them
+        if (!empty($errors)) {
+            return implode("<br>", $errors); // Combine error messages for display
+        }
+    
         return null; // If everything is valid
     }
 

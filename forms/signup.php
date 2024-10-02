@@ -40,7 +40,6 @@ class Signup {
         </div>
         <?php
     }
-    
 }
 
 // Class to handle form validation and database interaction
