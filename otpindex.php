@@ -4,7 +4,6 @@ require_once "database/dbHandler.php";
 
 $ObjLayouts->heading();
 $ObjNav->navBar();
-$Objdbconnect = new dbConnection();
 $connection = $Objdbconnect->getConnection();
 
 // Create an instance of dbHandler

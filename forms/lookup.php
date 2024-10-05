@@ -3,6 +3,8 @@ class lookup {
     public function lookup_form() {
         ?>
         <nav class="navbar bg-body-tertiary">
+        <h1>you can search for hotel guests in translvania</h1>
+
             <div class="container-fluid d-flex justify-content-center">
                 <form action=" " method="POST" class="d-flex" role="search">
                     <input class="form-control me-2" type="search" name="username" placeholder="Search" aria-label="Search">

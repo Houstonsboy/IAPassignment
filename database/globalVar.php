@@ -1,11 +1,14 @@
 <?php
 class globalVar {
-    public function setVar($fullname, $email, $username, $password) {
+    public function setVar($fullname, $email, $username, $password,$otpcode) {
         try{
         $_SESSION['fullname'] = $fullname;
         $_SESSION['email'] = $email;
         $_SESSION['username'] = $username;
         $_SESSION['password'] = $password;
+        $_SESSION['otpcode'] = $otpcode;
+
+        
         }catch(Exception $e)
         {
             return false;
@@ -31,6 +34,13 @@ class globalVar {
         if(isset($_SESSION['password'])) {
             $result['password'] = $_SESSION['password'];
             unset($_SESSION['password']);
+        }
+        if(isset($_SESSION['password'])) {
+            $result['password'] = $_SESSION['password'];
+            unset($_SESSION['password']);
+        }if(isset($_SESSION['otpcode'])) {
+            $result['otpcode'] = $_SESSION['otpcode'];
+            unset($_SESSION['otpcode']);
         }
 
         // Return the session data as an array

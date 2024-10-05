@@ -110,10 +110,10 @@ class dbHandler {
                 } else {
                     // Capture and store the output from PHPMailer if necessary
                     ob_clean(); // Clean the buffer and discard output
-                    $_SESSION['otpcode'] = $result['random'];         //store otpcode in session
+                    $randomotp = $result['random'];         //store otpcode in session
  
                     // Set the session variables
-                    $this->globalVar->setVar($fullname, $email, $username, $password);
+                    $this->globalVar->setVar($fullname, $email, $username, $password,$randomotp);
 
                     // Redirect the user to the OTP page
                     header('Location: otpindex.php');
@@ -124,11 +124,11 @@ class dbHandler {
         elseif($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otpverify'])) {
             // Handle OTP verification
             $otpcode = $_POST['otpcode'];
-
+            $results = $this->globalVar->getVar();
+             $optcodesession= $results['otpcode'];
             // Check if OTP matches
-            if ($_SESSION['otpcode'] == $otpcode)  {
+            if ($optcodesession == $otpcode)  {
                 // Retrieve stored user details
-                $results = $this->globalVar->getVar();
                 $fullname = $results['fullname'];
                 $email = $results['email'];
                 $username = $results['username'];
@@ -208,22 +208,18 @@ class dbHandler {
             }
         }
     }
+    public function fetchData($username)
+{
+    $sql = "SELECT * FROM users WHERE username = :username";
+    $stmt = $this->connection->prepare($sql);
+    
+    // Bind the actual value of $username to the placeholder :username
+    $stmt->execute(['username' => $username]);
+    
+    // Fetch all the matching records and return them
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
     
 }
-$Objdbconnect = new dbConnection();
-$connection = $Objdbconnect->getConnection();
 
-if ($connection instanceof PDO || $connection instanceof mysqli) {
-    // Instantiate dbHandler with the connection and handle signup and search
-    $ObjdbHandler = new dbHandler($connection);
-
-    // Handle form actions
-    if (isset($_POST['signup']) || isset($_POST['otpverify'])) {
-        $ObjdbHandler->handleSignup();
-    } elseif (isset($_POST['getUser'])) {
-        $ObjdbHandler->getUser();
-    }
-    
-} else {
-    echo $connection; // Print error message if connection fails
-}
