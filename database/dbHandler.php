@@ -106,14 +106,13 @@ class dbHandler {
                 if ($result === false) {
                     // If email sending fails, capture error and store in session.
                     ob_clean(); // Clean the buffer since an error occurred
-                    $errors['nameLetters_err'] = "Failed to send the OTP code"; // Or handle the error accordingly
+                    return "Failed to send the OTP code"; // Handle the error accordingly
                 } else {
                     // Capture and store the output from PHPMailer if necessary
                     ob_clean(); // Clean the buffer and discard output
                     $this->random = $result['random']; // Store random OTP from the mail response
 
                     // Set the session variables
-                    
                     $this->globalVar->setVar($fullname, $email, $username, $password);
 
                     // Redirect the user to the OTP page
@@ -121,21 +120,33 @@ class dbHandler {
                     exit(); // Ensure script execution stops after redirect
                 }
             }
-        }else if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup']))
-        {
+        } else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otpverify'])) {
+            // Handle OTP verification
             $otpcode = $_POST['otpcode'];
-            if($this->random==$otpcode)
-            {
-                $results=$this->globalVar->getVar();
-               $fullname= $result['fullname'];
-               $email= $result['email'];
-               $username= $result['username'];
-               $password= $result['password'];
-                      
-                
-                
-            }
 
+            // Check if OTP matches
+            if ($this->random == $otpcode) {
+                // Retrieve stored user details
+                $results = $this->globalVar->getVar();
+                $fullname = $results['fullname'];
+                $email = $results['email'];
+                $username = $results['username'];
+                $password = $results['password'];
+
+                // Insert data into the database
+                $insertResult = $this->insertData($fullname, $email, $username, $password);
+
+                if ($insertResult === true) {
+                    // If insertion is successful, display success message
+                    return "Registration successful!";
+                } else {
+                    // If insertion fails, return the error message
+                    return $insertResult;
+                }
+            } else {
+                // If OTP doesn't match, return an error
+                return "Invalid OTP. Please try again.";
+            }
         }
     }
 

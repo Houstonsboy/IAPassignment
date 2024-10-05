@@ -8,7 +8,7 @@ class otp {
                 <form action=" " method="POST" class="d-flex" role="search">
                     <label for="otpcode">otp code</label>
                     <input class="form-control me-2" type="search" name="otpcode" placeholder="OTP code" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit" name="getOTP">Done</button>
+                    <button class="btn btn-outline-success" type="submit" name="otpverify">Done</button>
                 </form>
             </div>
         </nav>
