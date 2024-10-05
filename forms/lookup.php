@@ -11,15 +11,20 @@ class lookup {
                 color:white;
             }
             .form-container {
-                background-color: #333; /* Dark background for the form */
+                background-color: rgba(00,00,00,0.8); /* Dark background for the form */
                 padding: 30px;
                 border-radius: 10px;
                 color: white;
+                box-shadow: 1px 1px 20px white;
+                
             }
             .header{
                 color:white;
                 text-align:center;
             }
+            
+            
+
         </style>
                 <h3 class="header"> search for hotel guests in translvania</h1>
 
