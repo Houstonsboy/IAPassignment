@@ -86,7 +86,7 @@ class dbHandler {
 
     // Function to handle the form submission
     public function handleSignup() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
             $fullname = $_POST['fullname'];
             $email = $_POST['email_address'];
             $username = $_POST['username'];
@@ -120,58 +120,110 @@ class dbHandler {
                     exit(); // Ensure script execution stops after redirect
                 }
             }
-        } else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otpverify'])) {
-            // Handle OTP verification
-            $otpcode = $_POST['otpcode'];
+    } elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otpverify'])) {
+        // Handle OTP verification
+        $otpcode = $_POST['otpcode'];
 
-            // Check if OTP matches
-            if ($this->random == $otpcode) {
-                // Retrieve stored user details
-                $results = $this->globalVar->getVar();
-                $fullname = $results['fullname'];
-                $email = $results['email'];
-                $username = $results['username'];
-                $password = $results['password'];
+        // Check if OTP matches the random value (e.g., stored in the session or class property)
+        if (empty($this->random)) {
+            return "OTP not generated. Please try signing up again.";
+        } elseif ($this->random == $otpcode) {
+            // Process the OTP and insert user data into the database
+            $results = $this->globalVar->getVar();
+            $fullname = $results['fullname'];
+            $email = $results['email'];
+            $username = $results['username'];
+            $password = $results['password'];
 
-                // Insert data into the database
-                $insertResult = $this->insertData($fullname, $email, $username, $password);
+            // Insert data into the database
+            $insertResult = $this->insertData($fullname, $email, $username, $password);
 
-                if ($insertResult === true) {
-                    // If insertion is successful, display success message
-                    return "Registration successful!";
-                } else {
-                    // If insertion fails, return the error message
-                    return $insertResult;
-                }
+            if ($insertResult === true) {
+                header('Location: ../forms/lookup.php');
+                exit();
             } else {
-                // If OTP doesn't match, return an error
-                return "Invalid OTP. Please try again.";
+                return "Error inserting user data into the database.";
             }
+        } else {
+            return "Invalid OTP. Please try again.";
         }
     }
+    return null;
+}
+
+  
 
     // Function to insert data into the database
     private function insertData($fullname, $email, $username, $password) {
         try {
-            // Check if username or email already exists
-            $sql = "SELECT COUNT(*) FROM users WHERE username = :username OR email = :email";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->execute(['username' => $username, 'email' => $email]);
-            $count = $stmt->fetchColumn();
-
-            if ($count > 0) {
-                return "Error: Username or email already exists!";
-            }
-
-            // Hash the password before saving it
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $sql = "INSERT INTO users (fullname, email, username, password) VALUES (:fullname, :email, :username, :password)";
-            $stmt = $this->connection->prepare($sql);
-            $stmt->execute(['fullname' => $fullname, 'email' => $email, 'username' => $username, 'password' => $hashedPassword]);
-
-            return true;
+          // Check for existing username or email
+          $sql = "SELECT COUNT(*) FROM users WHERE username = :username OR email = :email";
+          $stmt = $this->connection->prepare($sql);
+          $stmt->execute(['username' => $username, 'email' => $email]);
+          $count = $stmt->fetchColumn();
+      
+          if ($count > 0) {
+            return "Error: Username or email already exists!";
+          }
+      
+          // Hash the password
+          $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);  // Adjust cost as needed
+      
+          // Insert data
+          $sql = "INSERT INTO users (fullname, email, username, password) VALUES (:fullname, :email, :username, :password)";
+          $stmt = $this->connection->prepare($sql);
+          $stmt->execute(['fullname' => $fullname, 'email' => $email, 'username' => $username, 'password' => $hashedPassword]);
+      
+          return true;
         } catch (PDOException $e) {
-            return $e->getMessage();
+          return "Error: " . $e->getMessage();
+        }
+      }
+      public function getUser() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['getUser'])) {
+            $username = $_POST['username'];
+    
+            // Fetch the user data based on the username
+            $userData = $this->fetchData($username);
+    
+            if (!empty($userData)) {
+                // Display the fetched user data (assuming one match, but you can handle multiple)
+                echo "<table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+                foreach ($userData as $user) {
+                    echo "<tr>
+                        <td>{$user['username']}</td>
+                        <td>{$user['email']}</td>
+                    </tr>";
+                }
+                echo "</tbody></table>";
+            } else {
+                echo "No user found with that username.";
+            }
         }
     }
+    
+}
+$Objdbconnect = new dbConnection();
+$connection = $Objdbconnect->getConnection();
+
+if ($connection instanceof PDO || $connection instanceof mysqli) {
+    // Instantiate dbHandler with the connection and handle signup and search
+    $ObjdbHandler = new dbHandler($connection);
+
+    // Handle form actions
+    if (isset($_POST['signup']) || isset($_POST['otpverify'])) {
+        $ObjdbHandler->handleSignup();
+    } elseif (isset($_POST['getUser'])) {
+        $ObjdbHandler->getUser();
+    }
+    
+} else {
+    echo $connection; // Print error message if connection fails
 }

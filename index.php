@@ -18,7 +18,6 @@ if ($connection instanceof PDO) {
 }
 
 // Display the signup form (always display it here)
-$ObjSignup = new Signup();
 $ObjSignup->sign_up_form($errorMessage); // Pass error message to the form
 
 $ObjLayouts->footer();
