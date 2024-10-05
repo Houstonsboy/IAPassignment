@@ -5,7 +5,6 @@ $ObjLayouts->heading();
 $ObjNav->navBar();
 
 // Initialize the database connection
-$Objdbconnect = new dbConnection();
 $connection = $Objdbconnect->getConnection();
 
 // Create an instance of dbHandler

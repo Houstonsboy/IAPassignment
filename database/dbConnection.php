@@ -20,7 +20,6 @@ class dbConnection {
                     $conn = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
                     // Set the PDO error mode to exception
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    echo "Connected successfully with PDO :-)"; 
                     return $conn;
                 } catch(PDOException $e) {
                     return "Connection failed: " . $e->getMessage(); 

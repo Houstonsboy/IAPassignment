@@ -188,7 +188,7 @@ class dbHandler {
     
             if (!empty($userData)) {
                 // Display the fetched user data (assuming one match, but you can handle multiple)
-                echo "<table class='table table-striped'>
+                echo "<table class='table table-dark table-striped'>
                     <thead>
                         <tr>
                             <th>Username</th>

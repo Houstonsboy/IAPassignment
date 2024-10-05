@@ -5,6 +5,7 @@ $ObjLayouts->heading();
 $ObjNav->navBar();
 $Objlookup-> lookup_form();
 // Check if the database connection is successful
+$Objdbconnect = new dbConnection();
 $connection = $Objdbconnect->getConnection();
 
 // Create an instance of dbHandler
