@@ -21,30 +21,39 @@ class globalVar {
         $result = [];
         if(isset($_SESSION['fullname'])) {
             $result['fullname'] = $_SESSION['fullname'];
-            unset($_SESSION['fullname']);
+            
         }
         if(isset($_SESSION['email'])) {
             $result['email'] = $_SESSION['email'];
-            unset($_SESSION['email']);
+            
         }
         if(isset($_SESSION['username'])) {
             $result['username'] = $_SESSION['username'];
-            unset($_SESSION['username']);
         }
         if(isset($_SESSION['password'])) {
             $result['password'] = $_SESSION['password'];
-            unset($_SESSION['password']);
         }
         if(isset($_SESSION['password'])) {
             $result['password'] = $_SESSION['password'];
-            unset($_SESSION['password']);
         }if(isset($_SESSION['otpcode'])) {
             $result['otpcode'] = $_SESSION['otpcode'];
-            unset($_SESSION['otpcode']);
         }
 
         // Return the session data as an array
         return $result;
+    }
+    public function unsetThem()
+    {
+        unset($_SESSION['fullname']);
+        unset($_SESSION['email']);
+        unset($_SESSION['username']);
+        unset($_SESSION['password']);
+        unset($_SESSION['password']);
+        unset($_SESSION['otpcode']);
+
+
+
+
     }
 }
 ?>

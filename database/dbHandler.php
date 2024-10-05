@@ -139,6 +139,7 @@ class dbHandler {
 
                 if ($insertResult === true) {
                     // If insertion is successful, display success message
+                    $this->globalVar->unsetThem();
                     header('Location: lookupindex.php');
 
                     
