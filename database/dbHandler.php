@@ -86,7 +86,7 @@ class dbHandler {
 
     // Function to handle the form submission
     public function handleSignup() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
             $fullname = $_POST['fullname'];
             $email = $_POST['email_address'];
             $username = $_POST['username'];
@@ -110,8 +110,8 @@ class dbHandler {
                 } else {
                     // Capture and store the output from PHPMailer if necessary
                     ob_clean(); // Clean the buffer and discard output
-                    $this->random = $result['random']; // Store random OTP from the mail response
-
+                    $_SESSION['otpcode'] = $result['random'];         //store otpcode in session
+ 
                     // Set the session variables
                     $this->globalVar->setVar($fullname, $email, $username, $password);
 
@@ -120,37 +120,37 @@ class dbHandler {
                     exit(); // Ensure script execution stops after redirect
                 }
             }
-    } elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otpverify'])) {
-        // Handle OTP verification
-        $otpcode = $_POST['otpcode'];
+        } 
+        elseif($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otpverify'])) {
+            // Handle OTP verification
+            $otpcode = $_POST['otpcode'];
 
-        // Check if OTP matches the random value (e.g., stored in the session or class property)
-        if (empty($this->random)) {
-            return "OTP not generated. Please try signing up again.";
-        } elseif ($this->random == $otpcode) {
-            // Process the OTP and insert user data into the database
-            $results = $this->globalVar->getVar();
-            $fullname = $results['fullname'];
-            $email = $results['email'];
-            $username = $results['username'];
-            $password = $results['password'];
+            // Check if OTP matches
+            if ($_SESSION['otpcode'] == $otpcode)  {
+                // Retrieve stored user details
+                $results = $this->globalVar->getVar();
+                $fullname = $results['fullname'];
+                $email = $results['email'];
+                $username = $results['username'];
+                $password = $results['password'];
+                
+                // Insert data into the database
+                $insertResult = $this->insertData($fullname, $email, $username, $password);
 
-            // Insert data into the database
-            $insertResult = $this->insertData($fullname, $email, $username, $password);
+                if ($insertResult === true) {
+                    // If insertion is successful, display success message
+                    header('Location: lookupindex.php');
 
-            if ($insertResult === true) {
-                header('Location: ../forms/lookup.php');
-                exit();
+                    
+                } else {
+                    $errors['error'] = "error message.";
+                }
             } else {
-                return "Error inserting user data into the database.";
+                // If OTP doesn't match, return an error
+                return "Invalid OTP. Please try again.";
             }
-        } else {
-            return "Invalid OTP. Please try again.";
-        }
     }
-    return null;
-}
-
+        }
   
 
     // Function to insert data into the database
