@@ -2,7 +2,6 @@
 require "load.php"; // Load required files
 
 $ObjLayouts->heading();
-$ObjNav->navBar();
 
 // Initialize the database connection
 $connection = $Objdbconnect->getConnection();

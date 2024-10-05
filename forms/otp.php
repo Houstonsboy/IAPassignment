@@ -3,7 +3,11 @@
 class otp {
     public function opt_form($errorMessage = null) {
         ?>
-        <h1 style="text-align:center">An otp code has been sent to your email.</h1>
+        <div class="optform">
+       <div>
+       <h1 style="text-align:center">An otp code has been sent to your email.</h1>
+       <img  style="width:200px; height:200px;" src="assets/tickemoji-removebg-preview.png" alt="">
+       </div> 
         <nav class="navbar bg-body-tertiary">
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100">
         <?php if (!empty($errorMessage)): ?>
@@ -18,6 +22,7 @@ class otp {
         </form>
     </div>
 </nav>
+</div>
 
         <?php
     }

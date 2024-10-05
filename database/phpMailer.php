@@ -45,7 +45,7 @@ try {
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Welcome to Translvania hotel';
-    $mail->Body    = 'YOUR authentication is almost complete. Please fill the otp field with the digit below'.$random;
+    $mail->Body    = 'YOUR authentication is almost complete. Please fill the otp field with the digit below '.$random;
     $mail->AltBody = 'Follow this <a href="localhost:3000/index.php">Redirect</a> to go to AAA website';
 
     $mail->send();
