@@ -3,11 +3,27 @@
 class otp {
     public function opt_form($errorMessage = null) {
         ?>
+        <style>
+            .optform {
+                display: grid;
+            grid-template-columns: 1fr 2fr; /* Two columns of equal width */
+            gap: 10px; /* Space between the grid items */
+            padding: 20px;
+            }
+            .form-container {
+                background-color: #333; /* Dark background for the form */
+                padding: 30px;
+                border-radius: 10px;
+                color: white;
+            }
+        </style>
+            <h1 style="text-align:center">An otp code has been sent to your email.</h1>
+
         <div class="optform">
        <div>
-       <h1 style="text-align:center">An otp code has been sent to your email.</h1>
-       <img  style="width:200px; height:200px;" src="assets/tickemoji-removebg-preview.png" alt="">
+       <img  style="width:100%; height:100vh; margin-bottom:20px;" src="assets/cb.jpeg" alt="">
        </div> 
+       <div>
         <nav class="navbar bg-body-tertiary">
     <div class="container-fluid d-flex justify-content-center align-items-center vh-100">
         <?php if (!empty($errorMessage)): ?>
@@ -22,6 +38,7 @@ class otp {
         </form>
     </div>
 </nav>
+</div>
 </div>
 
         <?php
