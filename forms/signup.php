@@ -7,16 +7,20 @@ class Signup {
         <style>
             body {
                 height: 100vh; /* Full viewport height */
-                background-image: url("assets/moonman.jpeg");
+                background-image: url("assets/galaxy.jpg");
                 background-size:cover;
                 background-position:center;
+                background-repeat: no-repeat;
             }
             .form-container {
-                background-color: #333; /* Dark background for the form */
+                background-color: rgba(00,00,00,0.8); /* Dark background for the form */
                 padding: 30px;
                 border-radius: 10px;
                 color: white;
-                box-shadow:2px 2px 80px grey            }
+                box-shadow: 1px 1px 20px white;
+                
+            }
+
         </style>
 
         <div class="container h-100 d-flex justify-content-center align-items-center">
@@ -49,7 +53,7 @@ class Signup {
                                 <label for="password" class="form-label">Password:</label>
                                 <input type="password" name="password" class="form-control form-control-lg" maxlength="50" id="password" placeholder="Enter your password">
                             </div>
-                            <button type="submit" name="signup" class="btn btn-primary w-100">Submit</button>
+                            <button style="background-color:grey; color:black;" type="submit" name="signup" class="btn btn-primary w-100">Submit</button>
                         </form>
                     </div>
                 </div>
