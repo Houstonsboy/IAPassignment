@@ -16,7 +16,7 @@ class Signup {
                 padding: 30px;
                 border-radius: 10px;
                 color: white;
-            }
+                box-shadow:2px 2px 80px grey            }
         </style>
 
         <div class="container h-100 d-flex justify-content-center align-items-center">

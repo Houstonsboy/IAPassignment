@@ -125,9 +125,9 @@ class dbHandler {
             // Handle OTP verification
             $otpcode = $_POST['otpcode'];
             $results = $this->globalVar->getVar();
-             $optcodesession= $results['otpcode'];
+             $otpcodesession= $results['otpcode'];
             // Check if OTP matches
-            if ($optcodesession == $otpcode)  {
+            if ($otpcodesession == $otpcode)  {
                 // Retrieve stored user details
                 $fullname = $results['fullname'];
                 $email = $results['email'];
@@ -147,7 +147,8 @@ class dbHandler {
                 }
             } else {
                 // If OTP doesn't match, return an error
-                return "Invalid OTP. Please try again.";
+                $_SESSION['otp_error'] = "Wrong OTP code"; 
+               
             }
     }
         }
