@@ -188,14 +188,16 @@ class dbHandler {
     
             if (!empty($userData)) {
                 // Display the fetched user data (assuming one match, but you can handle multiple)
-                echo "<table class='table table-dark table-striped'>
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
+                echo "<div class='container'>
+    <div class='table-responsive' style='width: 600px; margin: 0 auto;'>
+        <table class='table table-dark table-striped'>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>";
                 foreach ($userData as $user) {
                     echo "<tr>
                         <td>{$user['username']}</td>

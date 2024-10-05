@@ -6,8 +6,10 @@ class Signup {
         ?>
         <style>
             body {
-                background-color: green; /* Set background color to green */
                 height: 100vh; /* Full viewport height */
+                background-image: url("assets/moonman.jpeg");
+                background-size:cover;
+                background-position:center;
             }
             .form-container {
                 background-color: #333; /* Dark background for the form */
